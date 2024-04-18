@@ -1,0 +1,117 @@
+﻿<Window x:Class="DataBaseGeo.View.AreaWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DataBaseGeo.View"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:conv="clr-namespace:DataBaseGeo.Model.Converters"
+        mc:Ignorable="d"  Name="Main"
+        Title="Окно площади" Height="450" Width="800">
+    <Window.Resources>
+        <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter" Invert="False"/>
+        <conv:NullToVisibilityConverter x:Key="InvertedNullToVisibilityConverter" Invert="True"/>
+        <Style x:Key="Btn">
+            <Setter Property="Button.Background" Value="#befb6d"/>
+            <Setter Property="Button.Margin" Value="3" />
+            <Setter Property="Button.Width" Value="80"/>
+        </Style>
+        <Style x:Key="Lb">
+            <Setter Property="Label.Margin" Value="3" />
+            <Setter Property="Label.FontSize" Value="12" />
+        </Style>
+        <Style x:Key="Back">
+            <Setter Property="Control.Background" Value="#dedade"/>
+            <Setter Property="Control.Margin" Value="5" />
+        </Style>
+        <Style x:Key="TextBox">
+            <Setter Property="ComboBox.Background" Value="#e9fdce"/>
+            <Setter Property="ComboBox.Margin" Value="2" />
+            <Setter Property="ComboBox.Width" Value="300"/>
+        </Style>
+    </Window.Resources>
+    <Grid Style="{StaticResource Back}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="200" Width="300" MaxWidth="400"/>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" Grid.Column="0">
+            <Label Style="{StaticResource Lb}" Content="Название площади"/>
+            <TextBox Style="{StaticResource TextBox}" Text="{Binding AreaName}"/>
+        </DockPanel>
+        <Label Style="{StaticResource Lb}" Grid.Row="1" Grid.Column="0" Content="Точки площади"/>
+        <ListBox Background="#e9fdce" ItemsSource="{Binding Area.AreaPoints}" Grid.Row="2"
+                 SelectedItem="{Binding SelectedAreaPoint}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <Label Content="X: "/>
+                        <TextBox MinWidth="40" Text="{Binding X}" >
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding DataContext.SavePointCommand, ElementName=Main}" CommandParameter="{Binding}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                        <Label Content=" Y: "/>
+                        <TextBox MinWidth="40" Text="{Binding Y}" >
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding DataContext.SavePointCommand, ElementName=Main}" CommandParameter="{Binding}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <DockPanel Grid.Row="3" HorizontalAlignment="left">
+            <Button Style="{StaticResource Btn}" Content="Добавить" 
+                    Command="{Binding AddPointCommand}"/>
+            <Button Style="{StaticResource Btn}" Command="{Binding DeletePointCommand}" 
+                    Content="Удалить"/>
+        </DockPanel>
+        <Label Style="{StaticResource Lb}" Grid.Row="4" Content="Профили"/>
+        <ListBox Background="#e9fdce" Grid.Row="5" 
+                 ItemsSource="{Binding Area.Profiles}" SelectedItem="{Binding SelectedProfile}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <Button Style="{StaticResource Btn}"
+                                Command="{Binding DataContext.OpenProfileCommand, ElementName=Main}" CommandParameter="{Binding}" Content="Открыть"/>
+                        <Label Content="{Binding Operator}" Visibility="{Binding Operator, Converter={StaticResource NullToVisibilityConverter}}"/>
+                        <Label Content="Не назначено" Visibility="{Binding Operator, Converter={StaticResource InvertedNullToVisibilityConverter}}"/>
+
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <DockPanel Grid.Row="6" Grid.Column="0" HorizontalAlignment="Left">
+            <Button Style="{StaticResource Btn}" Command="{Binding AddProfileCommand}" 
+                    Content="Добавить"/>
+            <Button Style="{StaticResource Btn}" Command="{Binding DeleteProfileCommand}" 
+                    Content="Удалить"/>
+        </DockPanel>
+        <GridSplitter Grid.Column="1" ShowsPreview="False" Width="5" Grid.RowSpan="10" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+        <Label Style="{StaticResource Lb}" Grid.Row="0" Grid.Column="2" Content="Визуализация"/>
+        <ScrollViewer Background="#e9fdce" Grid.Row="1" Grid.RowSpan="10" Grid.Column="2"  HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+            <Image Source="{Binding Image}" Stretch="Uniform" Margin="4">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseWheel">
+                        <i:InvokeCommandAction Command="{Binding ZoomCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Image>
+        </ScrollViewer>
+    </Grid>
+</Window>

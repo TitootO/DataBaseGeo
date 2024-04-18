@@ -1,0 +1,210 @@
+﻿<Window x:Class="DataBaseGeo.View.ProfileWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:DataBaseGeo.View"
+        mc:Ignorable="d"
+        Title="Окно профиля" Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="Btn">
+            <Setter Property="Button.Background" Value="#befb6d"/>
+            <Setter Property="Button.Margin" Value="3" />
+            <Setter Property="Button.Width" Value="80"/>
+        </Style>
+        <Style x:Key="Lb">
+            <Setter Property="Label.Margin" Value="3" />
+            <Setter Property="Label.FontSize" Value="12" />
+        </Style>
+        <Style x:Key="Back">
+            <Setter Property="Control.Background" Value="#dedade"/>
+            <Setter Property="Control.Margin" Value="5" />
+        </Style>
+        <Style x:Key="TextBox">
+            <Setter Property="ComboBox.Background" Value="#e9fdce"/>
+            <Setter Property="ComboBox.Margin" Value="2" />
+            <Setter Property="ComboBox.Width" Value="230"/>
+        </Style>
+        <Style x:Key="ComboBox">
+            <Setter Property="ComboBox.Margin" Value="2" />
+            <Setter Property="ComboBox.Width" Value="220"/>
+        </Style>
+    </Window.Resources>
+    <Grid Style="{StaticResource Back}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="200" Width="300" MaxWidth="400"/>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Column="0" Grid.Row="0">
+            <Label Style="{StaticResource Lb}" Content="Оператор"/>
+            <ComboBox Style="{StaticResource ComboBox}" ItemsSource="{Binding Operators}" 
+                      SelectedItem="{Binding SelectedOperator}"/>
+        </DockPanel>
+        <DockPanel Grid.Column="0" Grid.Row="1" 
+                   HorizontalAlignment="Left">
+            <Button Style="{StaticResource Btn}" Command="{Binding AddOperatorCommand}" 
+                    Content="Добавить"/>
+            <Button Style="{StaticResource Btn}" Command="{Binding DeleteOperatorCommand}" 
+                    Content="Удалить"/>
+        </DockPanel>
+        <Label  Style="{StaticResource Lb}" Grid.Row="2" Grid.Column="0" 
+                Content="Точки профиля"/>
+        <ListBox Background="#e9fdce" ItemsSource="{Binding Profile.ProfilePoints}" 
+                  SelectedItem="{Binding SelectedPoint}" Grid.Row="3">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <Label Content="X: "/>
+                    <TextBox MinWidth="40" Text="{Binding X}" >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="KeyDown">
+                                <i:InvokeCommandAction Command="{Binding DataContext.SavePointCommand, ElementName=Main}" CommandParameter="{Binding}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
+                    <Label Content="Y: "/>
+                    <TextBox MinWidth="40" Text="{Binding Y}" >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="LostFocus">
+                                <i:InvokeCommandAction Command="{Binding DataContext.SavePointCommand, ElementName=Main}" CommandParameter="{Binding}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
+                </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <DockPanel Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left">
+            <Button Style="{StaticResource Btn}" Content="Добавить" 
+                    Command="{Binding AddPointCommand}"/>
+            <Button Style="{StaticResource Btn}" Content="Удалить" 
+                    Command="{Binding DeletePointCommand}"/>
+        </DockPanel>
+        <Label  Style="{StaticResource Lb}" Grid.Column="0" Grid.Row="5" 
+               Content="Пикеты"/>
+        <ListBox Background="#e9fdce" ItemsSource="{Binding Profile.Pickets}" SelectedItem="{Binding SelectedPicket}"
+            Grid.Column="0" Grid.Row="6">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <DockPanel>
+                            <Label Content="X:  "/>
+                            <TextBox MinWidth="40" Text="{Binding X}" HorizontalAlignment="Left" >
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding DataContext.SavePicketCommand, ElementName=Main}" CommandParameter="{Binding}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <Label Content=" Y: "/>
+                            <TextBox MinWidth="40" Text="{Binding Y}" HorizontalAlignment="Left" >
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding DataContext.SavePicketCommand, ElementName=Main}" CommandParameter="{Binding}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                        </DockPanel>
+                        <DockPanel>
+                            <Label Content="Ra: " />
+                            <TextBox MinWidth="40" Text="{Binding Ra}" HorizontalAlignment="Left" >
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding DataContext.SavePicketCommand, ElementName=Main}" CommandParameter="{Binding}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <Label Content=" Th: "/>
+                            <TextBox MinWidth="40" Text="{Binding Th}" HorizontalAlignment="Left" >
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding DataContext.SavePicketCommand, ElementName=Main}" CommandParameter="{Binding}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <Label Content=" K: "/>
+                            <TextBox MinWidth="40" Text="{Binding K}" HorizontalAlignment="Left" >
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding DataContext.SavePicketCommand, ElementName=Main}" CommandParameter="{Binding}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <Label Content=" U: "/>
+                            <TextBox MinWidth="40" Text="{Binding U}" HorizontalAlignment="Left" >
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding DataContext.SavePicketCommand, ElementName=Main}" CommandParameter="{Binding}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                        
+                        </DockPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <DockPanel Grid.Row="7" Grid.Column="0" HorizontalAlignment="Left">
+           <!--<Button Command="{Binding AddRandomPicketCommand}" Margin="2" Width="110px" Content="Сгенерировать"/>-->
+            <Button Style="{StaticResource Btn}" Command="{Binding AddPicketCommand}" 
+                    Content="Добавить"/>
+            <Button Style="{StaticResource Btn}" Command="{Binding DeletePicketCommand}" 
+                    Content="Удалить"/>
+        </DockPanel>
+        <GridSplitter Grid.Column="1" ShowsPreview="False" Width="5" Grid.RowSpan="10" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+        <Label  Style="{StaticResource Lb}" Grid.Row="0" Grid.Column="2" 
+               Content="Визуализация:"/>
+        <Grid Grid.Row="1" Grid.RowSpan="10" Grid.Column="2" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ScrollViewer Background="#e9fdce" Grid.Row="0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+                <Image Source="{Binding Image}" Stretch="Uniform" Margin="4">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseWheel">
+                            <i:InvokeCommandAction Command="{Binding ZoomCommand}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Image>
+            </ScrollViewer>
+            <GridSplitter Grid.Row="1" ShowsPreview="False" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Row="0">
+                    <Label Content="График значений по:"/>
+                    <Label Content="Уран" Foreground="Red" />
+                    <Label Content="Торий" Foreground="Green" />
+                    <Label Content="Радий" Foreground="Orange" />
+                    <Label Content="Калий" Foreground="Blue" />
+                </StackPanel>
+                <ScrollViewer Background="#e9fdce" Grid.Row="1" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+                    <Image Source="{Binding GraphImage}" Stretch="Uniform" Margin="4">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseWheel">
+                                <i:InvokeCommandAction Command="{Binding ZoomCommand}" PassEventArgsToCommand="True" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Image>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

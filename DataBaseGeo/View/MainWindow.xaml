@@ -1,0 +1,112 @@
+﻿<Window x:Class="DataBaseGeo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:DataBaseGeo.ViewModel"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:DataBaseGeo"
+        xmlns:conv="clr-namespace:DataBaseGeo.Model.Converters"
+        mc:Ignorable="d"   Name="Main"
+        Title="Главная страница" Height="450" Width="800">
+    <Window.DataContext>
+        <vm:ApplicationViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <Style x:Key="Btn">
+            <Setter Property="Button.Background" Value="#befb6d"/>
+            <Setter Property="Button.Margin" Value="3" />
+            <Setter Property="Button.Width" Value="80"/>
+        </Style>
+        <Style x:Key="Lb">
+            <Setter Property="Label.Margin" Value="3" />
+            <Setter Property="Label.FontSize" Value="12" />
+        </Style>
+        <Style x:Key="Back">
+            <Setter Property="Control.Background" Value="#dedade"/>
+            <Setter Property="Control.Margin" Value="5" />
+        </Style>
+        <Style x:Key="ComboBox">
+            <Setter Property="ComboBox.Background" Value="Yellow"/>
+            <Setter Property="ComboBox.Margin" Value="2" />
+            <Setter Property="ComboBox.Width" Value="230"/>
+        </Style>
+    </Window.Resources>
+    <Grid Style="{StaticResource Back}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="200" Width="300" MaxWidth="400"/>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" Grid.Column="0">
+            <Label  Style="{StaticResource Lb}">Заказчик</Label>
+            <ComboBox Style="{StaticResource ComboBox}"
+                      ItemsSource="{Binding Customers}"
+                      SelectedItem="{Binding SelectedCustomer}">
+            </ComboBox>
+        </DockPanel>
+        <DockPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left">
+            <Button Command="{Binding AddCustomerCommand}" 
+                    Width="80" Content="Добавить" Style="{StaticResource Btn}"/>
+            <Button Command="{Binding DeleteCustomerCommand}"
+                    Content ="Удалить" Style="{StaticResource Btn}"/>
+        </DockPanel>
+        <DockPanel Grid.Row="2" Grid.Column="0">
+            <Label  Style="{StaticResource Lb}">Проект</Label>
+            <ComboBox Width="240" ItemsSource="{Binding SelectedCustomer.Projects}" 
+                      SelectedItem="{Binding SelectedProject}" 
+                      Style="{StaticResource ComboBox}"></ComboBox>
+        </DockPanel>
+        <DockPanel Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left">
+            <Button Command="{Binding AddProjectCommand}" 
+                     Style="{StaticResource Btn}" Content="Добавить"/>
+            <Button Command="{Binding DeleteProjectCommand}" 
+                     Style="{StaticResource Btn}" Content="Удалить"/>
+        </DockPanel>
+        <Label  Style="{StaticResource Lb}" Grid.Row="4" Grid.Column="0" Content="Площади"/>
+        <ListBox Background="#e9fdce"  Grid.Row="5" Grid.Column="0" 
+                 ItemsSource="{Binding SelectedProject.Areas}"
+                 SelectedItem="{Binding SelectedArea}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <Button Command="{Binding DataContext.OpenAreaCommand, ElementName=Main}"
+                                CommandParameter="{Binding}"
+                                Grid.Column="3" Content="Открыть"
+                                Style="{StaticResource Btn}"/>
+                        <Label Grid.Column="0" Content="{Binding Name}"/>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <DockPanel Grid.Row="6" Grid.Column="0" HorizontalAlignment="Left">
+            <Button Command="{Binding AddAreaCommand}" 
+                     Style="{StaticResource Btn}" Content="Добавить"/>
+            <Button Command="{Binding DeleteAreaCommand}"
+                     Style="{StaticResource Btn}" Content="Удалить"/>
+        </DockPanel>
+        <GridSplitter Grid.Column="1" ShowsPreview="False" Width="5" Grid.RowSpan="10" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+        <Label  Style="{StaticResource Lb}" Grid.Row="0" Grid.Column="2" Content="Визуализация"/>
+
+        <ScrollViewer Background="#e9fdce" Grid.Row="1" Grid.RowSpan="10" Grid.Column="2"  HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+            <Image  Source="{Binding Image}" Stretch="Uniform" Margin="4">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseWheel">
+                        <i:InvokeCommandAction Command="{Binding ZoomCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Image>
+        </ScrollViewer>
+        
+      
+    </Grid>
+</Window>
